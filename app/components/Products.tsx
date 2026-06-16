@@ -1,8 +1,28 @@
 'use client';
 
+import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import { ProductType } from "../api/products/route";
 
 export default function Products() {
+
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("/api/products");
+      const data = await response.json();
+
+      setProducts(data);
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   return (
     <div className="w-full flex justify-center flex-col h-full">
@@ -12,6 +32,8 @@ export default function Products() {
         </label>
         <div className="mt-2 grid grid-cols-1">
           <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             id="search"
             name="search"
             type="search"
@@ -26,9 +48,32 @@ export default function Products() {
       </div>
 
       <div className="mb-4 border-b border-1"></div>
-      <div>
-        Produtos aqui
-      </div>
+      <div
+  data-testid="products"
+  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4"
+>
+  {products.map((product) => (
+    <div
+      key={product.name}
+      data-testid="product"
+      className="border rounded-lg p-4 shadow-sm"
+    >
+      <img
+        src={product.image}
+        alt={product.name}
+        className="w-full h-48 object-contain mb-4"
+      />
+
+      <h2 className="font-semibold text-sm">
+        {product.name}
+      </h2>
+
+      <p className="text-gray-500">
+        {product.model}
+      </p>
+    </div>
+  ))}
+</div>
     </div>
   )
 }
