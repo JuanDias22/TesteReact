@@ -51,7 +51,7 @@ useEffect(() => {
 
   return (
     <div className="w-full flex justify-center flex-col h-full">
-      <div className="border-gray-500 w-1/2 mx-auto mb-4">
+      <div className="border-gray-500 w-full max-w-2xl mx-auto mb-4">
         <label htmlFor="search" className="block text-sm/6 font-medium text-gray-900">
           Pesquisa
         </label>
@@ -75,7 +75,7 @@ useEffect(() => {
       <div className="mb-4 border-b border-1"></div>
       <div
   data-testid="products"
-  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4"
+        className="flex flex-col gap-6 px-4 max-w-7xl mx-auto w-full"
 >
   {produtosFiltrados.length === 0 ? (
   <p className="text-center text-gray-500">
@@ -86,21 +86,64 @@ useEffect(() => {
     <div
       key={produto.name}
       data-testid="product"
-      className="border rounded-lg p-4 shadow-sm"
+              className="flex flex-col md:flex-row bg-white rounded-2xl shadow-md p-5 gap-6 items-center"
     >
+              <div className="flex flex-col items-center md:w-64">
       <img
         src={produto.image}
         alt={produto.name}
-        className="w-full h-48 object-contain mb-4"
+                  className="w-48 h-48 object-contain"
       />
 
-      <h2 className="font-semibold text-sm">
-        {produto.name}
-      </h2>
+                <h2 className="mt-4 text-xl font-bold text-center text-black">
+                  {produto.model}
+                </h2>
+              </div>
 
-      <p className="text-gray-500">
-        {produto.model}
-      </p>
+              <div className="hidden md:block w-1 self-stretch bg-black"></div>
+
+              <div className="flex-1 w-full">
+
+                <h1 className="text-2xl font-bold text-black mb-6">
+        {produto.name}
+                </h1>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+
+                  <div>
+                    <p className="text-lg text-gray-400">Durabilidade</p>
+                    <strong className="text-xl font-bold text-black">{produto.treadwear}</strong>
+                  </div>
+
+                  <div>
+                    <p className="text-lg text-gray-400">Tração</p>
+                    <strong className="text-xl font-bold text-black">{produto.traction}</strong>
+                  </div>
+
+                  <div>
+                    <p className="text-lg text-gray-400">Temperatura</p>
+                    <strong className="text-xl font-bold text-black">{produto.temperature}</strong>
+                  </div>
+
+                  <div>
+                    <p className="text-lg text-gray-400">Índice de velocidade</p>
+                    <strong className="text-xl font-bold text-black">{produto.speedRating}</strong>
+                  </div>
+
+                  <div>
+                    <p className="text-lg text-gray-400">Capacidade de carga</p>
+                    <strong className="text-xl font-bold text-black">{produto.loadIndex}</strong>
+                  </div>
+
+                  <div>
+                    <p className="text-lg text-gray-400">Desenho</p>
+                    <strong className="text-xl font-bold text-black">{produto.pattern.charAt(0) + produto.pattern.slice(1).toLowerCase()}</strong>
+                  </div>
+
+                </div>
+
+              </div>
+
     </div>
   ))
 )}
