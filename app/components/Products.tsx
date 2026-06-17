@@ -1,28 +1,50 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { ProductType } from "../api/products/route";
 
 export default function Products() {
+const [produtos, setProdutos] = useState<ProductType[]>([]);
+const [pesquisa, setPesquisa] = useState("");
 
-  const [products, setProducts] = useState<ProductType[]>([]);
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-  const fetchProducts = async () => {
+useEffect(() => {
+  const buscarProdutos = async () => {
     try {
-      const response = await fetch("/api/products");
-      const data = await response.json();
+      const resposta = await fetch("/api/products");
+      const dados = await resposta.json();
 
-      setProducts(data);
-    } catch (error) {
-      console.error("Erro ao buscar produtos:", error);
+      setProdutos(dados);
+    } catch (erro) {
+      console.error("Erro ao buscar produtos:", erro);
     }
   };
 
-  fetchProducts();
+  buscarProdutos();
 }, []);
+
+  const produtosFiltrados = useMemo(() => {
+    if (!pesquisa.trim()) {
+      return produtos;
+    }
+
+    const termos = pesquisa
+      .toLowerCase()
+      .trim()
+      .split(/\s+/);
+
+    return produtos.filter((produto) => {
+      const textoPesquisavel = [
+        produto.name,
+        produto.model,
+        ...produto.cars,
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return termos.every((termo) => textoPesquisavel.includes(termo));
+    });
+  }, [produtos, pesquisa]);
 
   return (
     <div className="w-full flex justify-center flex-col h-full">
@@ -32,8 +54,8 @@ export default function Products() {
         </label>
         <div className="mt-2 grid grid-cols-1">
           <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={pesquisa}
+            onChange={(e) => setPesquisa(e.target.value)}
             id="search"
             name="search"
             type="search"
@@ -52,27 +74,33 @@ export default function Products() {
   data-testid="products"
   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4"
 >
-  {products.map((product) => (
+  {produtosFiltrados.length === 0 ? (
+  <p className="text-center text-gray-500">
+    Nenhum produto encontrado
+  </p>
+) : (
+  produtosFiltrados.map((produto) => (
     <div
-      key={product.name}
+      key={produto.name}
       data-testid="product"
       className="border rounded-lg p-4 shadow-sm"
     >
       <img
-        src={product.image}
-        alt={product.name}
+        src={produto.image}
+        alt={produto.name}
         className="w-full h-48 object-contain mb-4"
       />
 
       <h2 className="font-semibold text-sm">
-        {product.name}
+        {produto.name}
       </h2>
 
       <p className="text-gray-500">
-        {product.model}
+        {produto.model}
       </p>
     </div>
-  ))}
+  ))
+)}
 </div>
     </div>
   )
