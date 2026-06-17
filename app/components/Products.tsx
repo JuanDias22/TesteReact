@@ -5,26 +5,23 @@ import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { ProductType } from "../api/products/route";
 
 export default function Products() {
-const [produtos, setProdutos] = useState<ProductType[]>([]);
-const [pesquisa, setPesquisa] = useState("");
+  const [produtos, setProdutos] = useState<ProductType[]>([]);
+  const [pesquisa, setPesquisa] = useState("");
 
-useEffect(() => {
-  const buscarProdutos = async () => {
-    try {
-      const resposta = await fetch("/api/products");
-        if (!resposta.ok) {
-          throw new Error("Erro ao buscar produtos");
-        }
+  useEffect(() => {
+    const buscarProdutos = async () => {
+      try {
+        const resposta = await fetch("/api/products");
         const dados: ProductType[] = await resposta.json();
 
-      setProdutos(dados);
-    } catch (erro) {
-      console.error("Erro ao buscar produtos:", erro);
-    }
-  };
+        setProdutos(dados);
+      } catch (erro) {
+        console.error("Erro ao buscar produtos:", erro);
+      }
+    };
 
-  buscarProdutos();
-}, []);
+    buscarProdutos();
+  }, []);
 
   const produtosFiltrados = useMemo(() => {
     if (!pesquisa.trim()) {
@@ -74,26 +71,26 @@ useEffect(() => {
 
       <div className="mb-4 border-b border-1"></div>
       <div
-  data-testid="products"
+        data-testid="products"
         className="flex flex-col gap-6 px-4 max-w-7xl mx-auto w-full"
->
-  {produtosFiltrados.length === 0 ? (
-  <p className="text-center text-gray-500">
-    Nenhum produto encontrado
-  </p>
-) : (
-  produtosFiltrados.map((produto) => (
-    <div
-      key={produto.name}
-      data-testid="product"
+      >
+        {produtosFiltrados.length === 0 ? (
+          <p className="text-center text-gray-500">
+            Nenhum produto encontrado
+          </p>
+        ) : (
+          produtosFiltrados.map((produto) => (
+            <div
+              key={produto.name}
+              data-testid="product"
               className="flex flex-col md:flex-row bg-white rounded-2xl shadow-md p-5 gap-6 items-center"
-    >
+            >
               <div className="flex flex-col items-center md:w-64">
-      <img
-        src={produto.image}
-        alt={produto.name}
+                <img
+                  src={produto.image}
+                  alt={produto.name}
                   className="w-48 h-48 object-contain"
-      />
+                />
 
                 <h2 className="mt-4 text-xl font-bold text-center text-black">
                   {produto.model}
@@ -105,7 +102,7 @@ useEffect(() => {
               <div className="flex-1 w-full">
 
                 <h1 className="text-2xl font-bold text-black mb-6">
-        {produto.name}
+                  {produto.name}
                 </h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -144,10 +141,10 @@ useEffect(() => {
 
               </div>
 
-    </div>
-  ))
-)}
-</div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   )
 }
