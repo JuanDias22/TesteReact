@@ -12,7 +12,10 @@ useEffect(() => {
   const buscarProdutos = async () => {
     try {
       const resposta = await fetch("/api/products");
-      const dados = await resposta.json();
+        if (!resposta.ok) {
+          throw new Error("Erro ao buscar produtos");
+        }
+        const dados: ProductType[] = await resposta.json();
 
       setProdutos(dados);
     } catch (erro) {
